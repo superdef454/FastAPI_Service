@@ -10,26 +10,27 @@ router = APIRouter(
 )
 
 @router.get('')
-def get_list_of_records( # Получить список записей
+async def get_list_of_records( # Получить список записей
     from_data: datetime.date,
     to: datetime.date = datetime.datetime.now()
 ):
-    return ID.get_list_of_records_from_webinar(from_data, to)
+    # return await ID.get_list_of_records_from_webinar(from_data, to)
+    return await ID.test(100)
 
 @router.delete('')
-def delete_records( # Удалить список записей
+async def delete_records( # Удалить список записей
     recordID: List[str]
 ):
-    return ID.Delete()
+    return await ID.Delete(recordID)
 
 @router.post('/conversions')
-def get_list_of_records( # Поставить записи на конвертацию
+async def get_list_of_records( # Поставить записи на конвертацию
     recordID: List[str]
 ):
-    return ID.Start_conversion(recordID)
+    return await ID.Start_conversion(recordID)
 
 @router.get('/conversions')
-def Check_conversion_status( # Проверить статус конвертации
+async def Check_conversion_status( # Проверить статус конвертации
     conversionID: str
 ):
-    return ID.Check_conversion_status(conversionID)
+    return await ID.Check_conversion_status(conversionID)
