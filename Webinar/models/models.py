@@ -4,11 +4,6 @@ from enum import Enum
 from pydantic import BaseModel
 import datetime
 
-# from database import Base
-
-# class Accessor():
-#     pass
-
 class video_status(str, Enum):
     none = "none" # Ничего
     converted = "converted" # Конвертируется

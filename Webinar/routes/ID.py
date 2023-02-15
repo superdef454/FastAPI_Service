@@ -33,3 +33,8 @@ async def Check_conversion_status( # Проверить статус конве�
     conversionID: str
 ):
     return await ID.Check_conversion_status(conversionID)
+
+@router.post('/check')
+async def check_records_status(
+):
+    return await ID.Check_records_status()

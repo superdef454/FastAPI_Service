@@ -1,16 +1,26 @@
 import aiohttp
 import asyncio
-import requests
 from typing import List
 import datetime
+import aiofiles
 
 from models.models import ID as id
 
 from settings import settungs
 
-async def request(session: aiohttp.ClientSession, url, data=None): # Надо проверить дату
-    async with session.get(url, data=data) as response:
-        return await response.json()
+async def request(session: aiohttp.ClientSession, url, data=None, method: str ="get"): # Надо проверить дату
+    if method == "delete":
+        async with session.delete(url, data=data) as response:
+            return await response.json()
+    elif method == "post":
+        async with session.post(url, data=data) as response:
+            return await response.json()
+    elif method == "put":
+        async with session.put(url, data=data) as response:
+            return await response.json()
+    else:
+        async with session.get(url, data=data) as response:
+            return await response.json()
 
 class ID:
     headers = {
@@ -18,7 +28,8 @@ class ID:
             "Content-Type": "application/x-www-form-urlencoded" # Хз что это из документации апи
     }
 
-    async def get_list_of_records_from_webinar(from_data: datetime.date, to_date: datetime.date = datetime.datetime.now().date()): # -> List[id]:
+    async def get_list_of_records_from_webinar(from_data: datetime.date, to_date: datetime.date = datetime.datetime.now().date()): 
+        # -> List[id]:
         url = f"https://userapi.webinar.ru/v3/records?from={from_data}&to={to_date}"
         print(url)
         async with aiohttp.ClientSession(trust_env = True, headers=ID.headers) as session:
@@ -43,7 +54,7 @@ class ID:
             tasks = []
             for i in recordID:
                 url = f"https://userapi.webinar.ru/v3/records/{i}/conversions"
-                tasks.append(asyncio.ensure_future(request(session, url, data=data)))
+                tasks.append(asyncio.ensure_future(request(session, url, data=data, method="post")))
             answers_to_tasks = await asyncio.gather(*tasks)
             for i in answers_to_tasks:
                 conversIDs.append(i)
@@ -56,12 +67,16 @@ class ID:
             tasks = []
             for i in recordID:
                 url = f"https://userapi.webinar.ru/v3/records/{i}"
-                tasks.append(asyncio.ensure_future(request(session, url)))
+                tasks.append(asyncio.ensure_future(request(session, url, method="delete")))
             answers_to_tasks = await asyncio.gather(*tasks)
             for i in answers_to_tasks:
                 list_response.append(i)
                 # Добавить проверку на выполнение
             return list_response
 
-    def Download(downloadUrl: str):
-        path = "//data/"
+    async def Check_records_status():
+        time = datetime.datetime.now().time()
+        print(time)
+
+    async def Download(downloadUrl: str):
+        path = "//data/" # прописать путь до папки сейва

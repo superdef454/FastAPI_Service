@@ -9,4 +9,4 @@ app.include_router(router)
 
 @app.get('/')
 def is_alive():
-    return {'Статус сервера': 'True'}
+    return {'Статус сервера': 'Активен'}

@@ -1,4 +1,5 @@
 from pydantic import BaseSettings
+import os
 
 class Settings(BaseSettings):
     server_host: str = '192.168.221.175'
