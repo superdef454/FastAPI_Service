@@ -22,6 +22,8 @@ async def request(session: aiohttp.ClientSession, url, data=None, method: str ="
         async with session.get(url, data=data) as response:
             return await response.json()
 
+last_time = datetime.datetime.now()
+
 class ID:
     headers = {
             "x-auth-token":settungs.token,
@@ -74,9 +76,15 @@ class ID:
                 # Добавить проверку на выполнение
             return list_response
 
-    async def Check_records_status():
-        time = datetime.datetime.now().time()
-        print(time)
+    def Update():
+        global last_time
+        time = datetime.datetime.now()
+        delta = time - last_time
+        if delta > datetime.timedelta(seconds=5): 
+            last_time = time 
+            ID.Download("12312344")
+            # чтобы не раньше чем в 5 минут делать опрос
 
-    async def Download(downloadUrl: str):
-        path = "//data/" # прописать путь до папки сейва
+    def Download(downloadUrl: str):
+        path = settungs.path_to_downloads # прописать путь до папки сейва
+        print(path)
