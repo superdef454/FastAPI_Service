@@ -82,9 +82,14 @@ class ID:
         delta = time - last_time
         if delta > datetime.timedelta(seconds=5): 
             last_time = time 
-            ID.Download("12312344")
+            ID.Download("1231/2344")
             # чтобы не раньше чем в 5 минут делать опрос
 
-    def Download(downloadUrl: str):
+    async def Download(downloadUrl: str):
         path = settungs.path_to_downloads # прописать путь до папки сейва
-        print(path)
+        async with aiohttp.ClientSession(trust_env = True) as session:
+            async with session.get(downloadUrl) as resp:
+                data = await resp.read()
+                filename = path + downloadUrl.split('/')[-1]
+                async with aiofiles.open(filename, 'wb') as file:
+                    await file.write(data)
